@@ -1,0 +1,155 @@
+#include<string.h>
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#define NULL 0
+
+struct node
+{
+char name[50];
+char tel[50];
+struct node *next;
+};
+
+struct node *first = NULL;
+/*--------------------------------------CREATE----------------------------------------*/
+void create()
+{
+FILE *fptr;
+int i,n;
+struct node *pnode,*p;
+fptr = fopen("Data.csv","a+");
+printf("Enter the number of nodes required:\n");
+scanf("%d",&n);
+
+for(i=1;i<=n;i++)
+{
+pnode = (struct node*)malloc(sizeof(struct node));
+if(pnode==NULL)
+{
+printf("Memory Overflow. Unable to create.\n");
+return;
+}
+printf("Enter the name of contact:  ");
+scanf("%s",pnode->name);
+fprintf(fptr, "%s," , pnode->name);
+
+printf("Enter the mobile no. of contact:  ");
+scanf("%s",pnode->tel);
+fprintf(fptr, "%s\n" , pnode->tel);
+
+pnode->next=NULL;
+
+if(first==NULL)
+	first=p=pnode;
+else
+{
+	p->next=pnode;
+	p=pnode;
+}
+}
+fclose(fptr);
+}
+/*-------------------------------------READ ----------------------------------------------*/
+void read()
+{
+char buffer[1024];
+char *record, *line;
+int i=0 , j=0 , m=-1 ;
+struct  node  *pnode , *p ;
+FILE *fstream = fopen("Data.csv","r");
+first = NULL;
+clrscr();
+
+ if(fstream == NULL)
+   {
+      printf("\n file opening failed");
+   }
+
+while( (line=fgets(buffer,sizeof(buffer),fstream) ) != NULL )
+ {
+     record = strtok(line,",");
+     while(record != NULL)
+     {
+	printf("\n%d->%s\n",m,record);
+	pnode=(struct node*)malloc(sizeof(struct node)) ;
+	++m;
+	if(m%2==0)
+	   {
+	     strcpy(pnode->name,record);
+	   }
+	 if(m%2!=0)
+	   {
+	     strcpy(pnode->tel,record);
+	   }
+record = strtok(NULL,";");
+pnode->next=NULL ;
+ if(first==NULL)
+   {
+   first=p=pnode ;
+   }
+   else
+  {
+    p->next=pnode ;
+    p=pnode ;
+   }
+ }
+}
+}
+/*------------------------------------TRAVERSE ----------------------------------*/
+void  traverse()
+{
+struct  node  *p ;
+if(first==NULL)
+printf("Linked List Empty") ;
+else
+ {
+  printf("Linked List is as shown: \n") ;
+  p=first ;
+  while(p!=NULL)
+  {
+   printf(" <*>%s => %s <*>  ",p->name,p->tel) ;
+   p=p->next ;
+  }
+ }
+}
+/*-------------------------------------------------------------------------------------*/
+void  main()
+{ FILE *fptr;
+  char  n[50] , t[50] ;
+  int ch ;
+  clrscr() ;
+  do
+  { fptr = fopen("record.txt","a+");
+    printf("\n Menu: \n") ;
+    printf("1:Read data\n");
+    printf("2:Create Linked List \n") ;
+    printf("3:Traverse \n") ;
+    printf("4:Exit \n") ;
+
+    printf("\nEnter your choice: ") ;
+    scanf("%d",&ch) ;
+
+    switch(ch)
+    {
+      case 1:
+      read();
+      break;
+
+      case 2:
+      create() ;
+      break ;
+
+      case 3:
+      traverse() ;
+      break ;
+
+      case 4:
+      break ;
+    }
+  fclose(fptr);
+  }
+  while(ch!=4) ;
+
+  getch() ;
+}
