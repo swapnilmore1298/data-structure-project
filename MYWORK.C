@@ -14,51 +14,11 @@ struct  node
 
 struct  node  *first=NULL ;
 
-void  read()
-{ FILE *fptr;
-  char ch[20];
-  int x, i , n ,n1=0;
-  struct  node  *pnode , *p ;
-  fptr = fopen("record.txt","r");
-    pnode=(struct node*)malloc(sizeof(struct node)) ;
-
-    while(!feof(fptr))
-    {n1++;
-    if(n1>=50)
-    break;
-    switch(x)
-    {
-    x=1;
-    case 1:
-    fscanf(fptr,"%s",ch);
-    strcpy(pnode->name,ch);
-    x++;
-    break;
-    case 2:
-    fscanf(fptr,"%s",ch);
-    strcpy(pnode->tel,ch);
-    break;
-    };
-    }
-    /* New node will be the last node */
-    pnode->next=NULL ;
-
-    if(first==NULL)
-	 first=p=pnode ;
-    else
-    {
-	    p->next=pnode ;
-	    p=pnode ;   /* p keeps track of last node */
-    }
-
-  fclose(fptr);
-}
-
 void  create()
 { FILE *fptr;
   int  i , n ;
   struct  node  *pnode , *p ;
-  fptr = fopen("record.txt","a+");
+  fptr = fopen("Record.csv","a+");
   printf("Enter the number of nodes required:\n") ;
   scanf("%d",&n) ;
 
@@ -78,7 +38,7 @@ void  create()
     fprintf(fptr,"%s\t",pnode->name);
     printf("Enter the telephone no. of the contact: ");
     scanf("%s",pnode->tel);
-    fprintf(fptr,"%s\n",pnode->tel);
+    fprintf(fptr,",%s\n",pnode->tel);
     /* New node will be the last node */
     pnode->next=NULL ;
 
@@ -91,6 +51,56 @@ void  create()
     }
   }
   fclose(fptr);
+}
+
+void  read()
+{
+   char buffer[1024] ;
+   char *record,*line;
+   int i=0,j=0,m=-1,n=0,ch;
+   int mat[100][100];
+   struct  node  *pnode , *p ;
+   FILE *fstream = fopen("Record.csv","r");
+   first = NULL;
+   clrscr();
+
+   if(fstream == NULL)
+   {
+      printf("\n file opening failed");
+   }
+   while((line=fgets(buffer,sizeof(buffer),fstream))!=NULL)
+   {
+     record = strtok(line,",");
+     while(record != NULL)
+     {
+	     pnode=(struct node*)malloc(sizeof(struct node)) ;
+	    //here you can put the record into the array as per your requirement.
+	    ++m;
+	    if(m%2==0)
+	   { strcpy(pnode->name,record);
+	    printf("/* %s in %d(name)*/",pnode->name,pnode);
+	   }
+	    if(m%2!=0)
+	   { strcpy(pnode->tel,record);
+	    printf("/* %s in %d(tel)*/\n",pnode->tel,pnode);
+	   }
+	    mat[i][j++] = atoi(record) ;
+
+	    record = strtok(NULL,",");
+	       pnode->next=NULL ;
+
+    if(first==NULL)
+	 first=p=pnode ;
+    else
+    {
+	    p->next=pnode ;
+	    p=pnode ;   /* p keeps track of last node */
+    }
+
+   }
+  ++i ;
+  }
+  pnode->next=NULL;
 }
 
 void  insertbegining(char n[],char t[])
@@ -159,7 +169,7 @@ void  search(char n[])
 void  traverse()
 {
   struct  node  *p ;
-  if(first==NULL)
+   if(first==NULL)
     printf("Linked List Empty") ;
   else
   {
@@ -168,7 +178,7 @@ void  traverse()
     p=first ;
     while(p!=NULL)
     {
-      printf("%s = %s\n ",p->name,p->tel) ;
+      printf("<*>p->name is %s & p->tel is %s<*> ",p->name,p->tel) ;
       p=p->next ;
     }
     printf("\n") ;
@@ -269,4 +279,3 @@ void  main()
 
   getch() ;
 }
-
